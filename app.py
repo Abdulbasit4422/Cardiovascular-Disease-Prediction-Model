@@ -98,23 +98,19 @@ with st.form("prediction_form"):
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        age = st.slider("Age (years)", 20, 100, 50)
-        height = st.slider("Height (cm)", 140, 220, 170)
-        weight = st.slider("Weight (kg)", 40, 150, 70)
+        age = st.slider("Age (years)"0, 20, 100, 50)
+        height = st.slider("Height (cm)"0, 140, 220, 170)
+        weight = st.slider("Weight (kg)"0, 40, 150, 70)
         bmi = weight / ((height/100) ** 2)
         st.metric("BMI", f"{bmi:.1f}")
         
     with col2:
-        ap_hi = st.slider("Systolic BP (mmHg)", 80, 200, 120)
-        ap_lo = st.slider("Diastolic BP (mmHg)", 50, 150, 80)
-        cholesterol = st.selectbox("Cholesterol Level", 
-                                 ["Normal", "Above Normal", "Well Above Normal"],
-                                 index=0)
+        ap_hi = st.slider("Systolic BP (mmHg)"0, 80, 200, 120)
+        ap_lo = st.slider("Diastolic BP (mmHg)"0, 50, 150, 80)
+        cholesterol = st.number_input("Cholesterol level value" )
         
     with col3:
-        gluc = st.selectbox("Glucose Level", 
-                          ["Normal", "Above Normal", "Well Above Normal"],
-                          index=0)
+        gluc = st.number_input("Glucose Level:")
         smoke = st.checkbox("Smoker")
         alco = st.checkbox("Alcohol Consumer")
         active = st.checkbox("Physically Active")
@@ -134,8 +130,8 @@ if submitted:
         'ap_hi': ap_hi,
         'ap_lo': ap_lo,
         'bmi': bmi,
-        'cholesterol': cholesterol_map[cholesterol],
-        'gluc': gluc_map[gluc],
+        'cholesterol': cholesterol,
+        'gluc': gluc,
         'smoke': int(smoke),
         'alco': int(alco),
         'active': int(active),
