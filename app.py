@@ -65,7 +65,7 @@ def load_model():
 
 model_data = load_model()
 model = model_data['model']
-feature_names = list(model.feature_names_in_)
+feature_names = list(model.features)
 
 
 # Title and description
