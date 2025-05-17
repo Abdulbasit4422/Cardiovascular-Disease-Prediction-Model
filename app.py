@@ -65,7 +65,8 @@ def load_model():
 
 model_data = load_model()
 model = model_data['model']
-feature_names = model_data['features']
+feature_names = list(model.feature_names_in_)
+
 
 # Title and description
 st.title("❤️ Cardiovascular Disease Risk Prediction")
