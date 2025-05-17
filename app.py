@@ -82,7 +82,7 @@ with st.form("prediction_form"):
         ap_hi = st.slider("Systolic BP (mmHg)", 0, 400, 120)
         ap_lo = st.slider("Diastolic BP (mmHg)", 0, 340, 80)
         cholesterol = st.selectbox(
-            "Cholesterol Level", ["Normal", "Above Normal", "Well Above Normal"], index=0
+            "Cholesterol Level", ["Normal (<200 mg/dl)", "Above Normal(200-239 mg/dl)", "Well Above Normal(>240 mg/dl)"], index=0
         )
 
     with col3:
