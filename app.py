@@ -99,15 +99,22 @@ with st.form("prediction_form"):
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        age = st.slider("Age (years)"0, 20, 100, 50)
-        height = st.slider("Height (cm)"0, 140, 220, 170)
-        weight = st.slider("Weight (kg)"0, 40, 150, 70)
+        age = st.slider("Age", 0, 120, 50, 
+               help="For infants (0-2 years), please enter age in months and select 'months' below")
+        age_unit = st.radio("Age unit", ["years", "months"], index=0)
+
+        if age_unit == "months":
+             age_years = age / 12  # Convert to years for your model
+        else:
+             age_years = age
+        height = st.slider("Height (cm)", 0, 420, 120)
+        weight = st.slider("Weight (kg)", 0, 420, 70)
         bmi = weight / ((height/100) ** 2)
         st.metric("BMI", f"{bmi:.1f}")
         
     with col2:
-        ap_hi = st.slider("Systolic BP (mmHg)"0, 80, 200, 120)
-        ap_lo = st.slider("Diastolic BP (mmHg)"0, 50, 150, 80)
+        ap_hi = st.slider("Systolic BP (mmHg)", 0, 400, 120)
+        ap_lo = st.slider("Diastolic BP (mmHg)", 0, 450, 80)
         cholesterol = st.number_input("Cholesterol level value" )
         
     with col3:
