@@ -65,7 +65,20 @@ def load_model():
 
 model_data = load_model()
 model = model_data['model']
-feature_names = list(model.features)
+feature_names = [
+    'age', 
+    'height', 
+    'weight',
+    'ap_hi',
+    'ap_lo',
+    'cholesterol',
+    'gluc',
+    'smoke',
+    'alco',
+    'active',
+    'gender_Female',
+    'gender_Male'
+]
 
 
 # Title and description
@@ -115,10 +128,14 @@ with st.form("prediction_form"):
     with col2:
         ap_hi = st.slider("Systolic BP (mmHg)", 0, 400, 120)
         ap_lo = st.slider("Diastolic BP (mmHg)", 0, 450, 80)
-        cholesterol = st.number_input("Cholesterol level value" )
+        cholesterol = st.selectbox("Cholesterol Level", 
+                                 ["Normal", "Above Normal", "Well Above Normal"],
+                                 index=0)
         
     with col3:
-        gluc = st.number_input("Glucose Level:")
+        gluc = st.selectbox("Glucose Level", 
+                          ["Normal", "Above Normal", "Well Above Normal"],
+                          index=0)
         smoke = st.checkbox("Smoker")
         alco = st.checkbox("Alcohol Consumer")
         active = st.checkbox("Physically Active")
@@ -128,8 +145,8 @@ with st.form("prediction_form"):
 # Prediction and results
 if submitted:
     # Prepare input data
-    cholesterol_map = {"Normal": 1, "Above Normal": 2, "Well Above Normal": 3}
-    gluc_map = {"Normal": 1, "Above Normal": 2, "Well Above Normal": 3}
+    cholesterol_map = {"Normal(< 200 mg/dL)": 1, "Above Normal (200–239)": 2, "Well Above Normal (>240)": 3}
+    gluc_map = {"Normal (< 140 mg/dL)": 1, "Above Normal(141-200mg/dl)": 2, "Well Above Normal(>200mg/dl)": 3}
     
     input_data = {
         'age': age * 365,  # Convert to days (as in original data)
@@ -138,8 +155,8 @@ if submitted:
         'ap_hi': ap_hi,
         'ap_lo': ap_lo,
         'bmi': bmi,
-        'cholesterol': cholesterol,
-        'gluc': gluc,
+        'cholesterol': cholesterol_map,
+        'gluc': gluc_map,
         'smoke': int(smoke),
         'alco': int(alco),
         'active': int(active),
