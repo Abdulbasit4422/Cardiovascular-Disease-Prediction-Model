@@ -917,11 +917,14 @@ dump(model_info, 'gradient_boosting_model_with_metadata_2.joblib')
 # 2. Save just the model (minimal version)
 dump(gbc, 'gradient_boosting_model_2.joblib')
 
+# Save the scaler
+dump(scaler, 'scaler.joblib')
+
 
 print("Models saved successfully:")
 print("- gradient_boosting_model_2.joblib")
 print("- gradient_boosting_model_with_metadata_2.joblib")
-
+print("- StandardScaler.joblib")
 
 # 4. Verification code (optional)
 def verify_model(filepath):
@@ -938,6 +941,7 @@ def verify_model(filepath):
 
 # Verify the saved models
 verify_model('gradient_boosting_model_with_metadata_2.joblib')
+
 
 
 # %%
