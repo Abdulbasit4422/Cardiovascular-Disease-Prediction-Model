@@ -36,8 +36,16 @@ def load_model():
     model_data = joblib.load('gradient_boosting_model_with_metadata_2.joblib')
     return model_data
 
+
+from joblib import load
+
+# Load the scaler
+scaler = load('scaler.joblib')
+
 model_data = load_model()
 model = model_data['model']
+
+
 
 # Define feature names as used during training
 feature_names = [
@@ -47,7 +55,7 @@ feature_names = [
 ]
 
 # Title and description
-st.title("❤️ Cardiovascular Disease Risk Prediction")
+st.title("❤️ Cardiovascular Risk Prediction Model App")
 st.markdown("""
 This app predicts your risk of cardiovascular disease using a Gradient Boosting Classifier model.
 Please fill in your health metrics below to get your personalized risk assessment.
