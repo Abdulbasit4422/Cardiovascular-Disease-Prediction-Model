@@ -72,6 +72,7 @@ with st.form("prediction_form"):
         age = st.slider("Age", 0, 120, 50)
         age_unit = st.radio("Age unit", ["years", "months"], index=0)
         age_years = age if age_unit == "years" else (age / 12)
+        
 
         height = st.slider("Height (cm)", 0, 420, 170)
         weight = st.slider("Weight (kg)", 0, 400, 70)
@@ -79,6 +80,10 @@ with st.form("prediction_form"):
         st.metric("BMI", f"{bmi:.1f}")
 
     with col2:
+        Gender = st.selectbox(
+            "Gender", ["Male", "Female"], index=0
+        )
+
         ap_hi = st.slider("Systolic BP (mmHg)", 0, 400, 120)
         ap_lo = st.slider("Diastolic BP (mmHg)", 0, 340, 80)
         cholesterol = st.selectbox(
