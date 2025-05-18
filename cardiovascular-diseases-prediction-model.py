@@ -474,10 +474,24 @@ features
 target
 
 # %%
-features_scale = scaler.fit_transform(features)
+print(features.columns.tolist())
 
 # %%
-x_scale = pd.DataFrame(features_scale,columns=[features.columns])
+parameter = features.drop(
+    ['age_group_children', 'age_group_teenager', 'age_group_youth', 'age_group_middle_age', 
+     'age_group_elderly', 'obesity_0', 'obesity_1', 'obesity_2', 'obesity_3', 
+     'obesity_4', 'hypertensive'], 
+    axis=1
+)
+
+parameter
+
+
+# %%
+features_scale = scaler.fit_transform(parameter)
+
+# %%
+x_scale = pd.DataFrame(features_scale,columns=[parameter.columns])
 x_scale
 
 # %%
@@ -519,13 +533,13 @@ X_test_selected = anova_selector.transform(X_test_scaled)
 anova_scores = anova_selector.scores_
 
 # Map feature names to their ANOVA F-scores
-feature_names = features.columns
+feature_names = parameter.columns
 anova_results = dict(zip(feature_names, anova_scores))
 
 # Display ANOVA results
 print("ANOVA F-scores for Features:")
-for feature, score in anova_results.items():
-    print(f"{feature}: {score:.2f}")
+for parameter, score in anova_results.items():
+    print(f"{parameter}: {score:.2f}")
 
 # Selected feature indices and names
 selected_feature_indices = anova_selector.get_support(indices=True)
@@ -539,23 +553,13 @@ print("\nSelected Features (Top k):", list(selected_features))
 #!pip install xgboost
 
 # %%
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
-from sklearn.naive_bayes import GaussianNB
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.linear_model import LogisticRegression
-from sklearn.svm import SVC
-from catboost import CatBoostClassifier  
-from xgboost import XGBClassifier   
+from sklearn.ensemble import  GradientBoostingClassifier 
 
 
 
 gbc = GradientBoostingClassifier(random_state=14)
 gbc.fit(X_train_scaled, y_train)
 
-
-xgb_model = XGBClassifier(
-    objective='binary:logistic',n_estimators=200, max_depth=5,learning_rate=0.1,subsample=0.8,colsample_bytree=0.8,scale_pos_weight=1,random_state=4,eval_metric='aucpr')
-xgb_model.fit(X_train_scaled, y_train)
 
 
 
@@ -570,7 +574,7 @@ import numpy as np
 # Dictionary of trained models
 models = {
     'Gradient Boosting': gbc,
-    'XGBoost': xgb_model,
+    
 }
 
 # Dictionary to store evaluation metrics
@@ -816,7 +820,7 @@ def plot_overfitting_diagnosis(results):
 # Dictionary of trained models
 models = {
     'Gradient Boosting': gbc,
-    'XGBoost': xgb_model,
+    
 }
 
 # Evaluate all models
@@ -908,30 +912,16 @@ model_info = {
 }
 
 # Save the model with metadata
-dump(model_info, 'gradient_boosting_model_with_metadata.joblib')
+dump(model_info, 'gradient_boosting_model_with_metadata_2.joblib')
 
 # 2. Save just the model (minimal version)
-dump(gbc, 'gradient_boosting_model.joblib')
+dump(gbc, 'gradient_boosting_model_2.joblib')
 
-# 3. Optional: Save the XGBoost model as well (from your training code)
-xgb_model_info = {
-    'model': xgb_model,
-    'model_name': 'XGBClassifier',
-    'model_params': xgb_model.get_params(),
-    'training_date': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-    'features': list(X_train_scaled.columns) if hasattr(X_train_scaled, 'columns') else f'feature_0_to_{X_train_scaled.shape[1]-1}',
-    'target': 'your_target_variable_name',  # Replace with your actual target name
-    'input_shape': X_train_scaled.shape,
-    'classes': xgb_model.classes_,
-    'n_classes': xgb_model.n_classes_,
-    'training_score': xgb_model.score(X_train_scaled, y_train)
-}
-dump(xgb_model_info, 'xgboost_model_with_metadata.joblib')
 
 print("Models saved successfully:")
-print("- gradient_boosting_model.joblib")
-print("- gradient_boosting_model_with_metadata.joblib")
-print("- xgboost_model_with_metadata.joblib")
+print("- gradient_boosting_model_2.joblib")
+print("- gradient_boosting_model_with_metadata_2.joblib")
+
 
 # 4. Verification code (optional)
 def verify_model(filepath):
@@ -947,8 +937,8 @@ def verify_model(filepath):
         print("Model object loaded successfully")
 
 # Verify the saved models
-verify_model('gradient_boosting_model_with_metadata.joblib')
-verify_model('xgboost_model_with_metadata.joblib')
+verify_model('gradient_boosting_model_with_metadata_2.joblib')
+
 
 # %%
 

@@ -33,7 +33,7 @@ st.markdown("""
 # Load the saved model
 @st.cache_resource
 def load_model():
-    model_data = joblib.load('gradient_boosting_model_with_metadata.joblib')
+    model_data = joblib.load('gradient_boosting_model_with_metadata_2.joblib')
     return model_data
 
 model_data = load_model()
@@ -41,7 +41,7 @@ model = model_data['model']
 
 # Define feature names as used during training
 feature_names = [
-    'age', 'height', 'weight', 'ap_hi', 'ap_lo',
+    'age', 'age_year', 'height', 'weight', 'ap_hi', 'ap_lo', 'bmi',
     'cholesterol', 'gluc', 'smoke', 'alco', 'active',
     'gender_Female', 'gender_Male'
 ]
@@ -109,10 +109,12 @@ if submitted:
     # Prepare input data with correct order and types
     input_data = {
         'age': age_years * 365,
+        'age_year': int(age_years),
         'height': float(height),
         'weight': float(weight),
         'ap_hi': int(ap_hi),
         'ap_lo': int(ap_lo),
+        'bmi': float(bmi),
         'cholesterol': cholesterol_map[cholesterol],
         'gluc': gluc_map[gluc],
         'smoke': int(smoke),
