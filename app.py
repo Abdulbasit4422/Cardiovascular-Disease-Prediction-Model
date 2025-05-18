@@ -117,12 +117,12 @@ if submitted:
     # Prepare input data with correct order and types
     input_data = {
         'age': age_years * 365,
-        'age_year': int(age_years),
         'height': float(height),
         'weight': float(weight),
         'ap_hi': int(ap_hi),
         'ap_lo': int(ap_lo),
         'bmi': float(bmi),
+        'age_year': int(age_years),
         'cholesterol': cholesterol_map[cholesterol],
         'gluc': gluc_map[gluc],
         'smoke': int(smoke),
@@ -131,7 +131,8 @@ if submitted:
         'gender_Female': 0,
         'gender_Male': 1
     }
-    input_df = pd.DataFrame([input_data], columns=feature_names).astype(float)
+    input_df = pd.DataFrame([input_data]).astype(float)
+
 
     # Predict
     prediction = model.predict(input_df)[0]
