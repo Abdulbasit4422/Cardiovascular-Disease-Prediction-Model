@@ -34,7 +34,6 @@ model_data, model, scaler = load_resources()
 
 # ---- Sidebar ----
 with st.sidebar:
-    st.image('assets/heart_icon.png', width=100)
     st.header("About this App")
     st.markdown("This tool predicts cardiovascular risk using a Gradient Boosting model.")
     st.markdown("---")
