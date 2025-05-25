@@ -488,17 +488,27 @@ parameter
 
 
 # %%
-features_scale = scaler.fit_transform(parameter)
+feature_names = ['age', 'height', 'weight', 'ap_hi', 'ap_lo', 'bmi', 'age_year',
+       'cholesterol', 'gluc', 'smoke', 'alco', 'active', 'gender_Female',
+       'gender_Male']
+print(feature_names)
+
 
 # %%
-x_scale = pd.DataFrame(features_scale,columns=[parameter.columns])
+#features_scale = scaler.fit_transform(parameter)
+
+# %%
+#x_scale = pd.DataFrame(features_scale,columns=[parameter.columns])
 x_scale
 
 # %%
 from sklearn.model_selection import train_test_split
 # Split data
-X_train,X_test,y_train,y_test = train_test_split(x_scale,target,test_size= 0.3, shuffle = True, random_state = 42,  stratify=target)
+X_train,X_test,y_train,y_test = train_test_split(parameter,target,test_size= 0.3, shuffle = True, random_state = 42,  stratify=target)
 
+
+
+# %%
 
 
 # %% [markdown]
@@ -511,9 +521,10 @@ from sklearn.preprocessing import StandardScaler
 
 #Standardizing the feature
 
-scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.transform(X_test)
+##scaler = StandardScaler()
+#X_train_scaled = scaler.fit(pd.DataFrame(X_train, columns=feature_names))
+
+#X_test_scaled = scaler.transform(X_test)
 
 # %% [markdown]
 # **Feature Selection Using ANOVA**
@@ -521,30 +532,49 @@ X_test_scaled = scaler.transform(X_test)
 # This will help select most relevant feature for training the model
 
 # %%
+from sklearn.preprocessing import StandardScaler
 from sklearn.feature_selection import SelectKBest, f_classif
+import pandas as pd
 
-# Perform ANOVA to select top k features
-k = 3  # Select top 3 features
+# 1) Suppose X_train, X_test are your raw feature arrays (n_samples × n_features)
+#    and y_train is your label array (n_samples,)
+
+# 2) Wrap them in DataFrames if you like (to keep track of names)
+feature_names = [
+    'age', 'height', 'weight', 'ap_hi', 'ap_lo', 'bmi', 'age_year',
+    'cholesterol', 'gluc', 'smoke', 'alco', 'active',
+    'gender_Female', 'gender_Male'
+]
+X_train_df = pd.DataFrame(X_train, columns=feature_names)
+X_test_df  = pd.DataFrame(X_test,  columns=feature_names)
+
+# 3) Scale
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train_df)  # <-- this returns an array
+X_test_scaled  = scaler.transform(X_test_df)
+
+# sanity check shapes
+print(X_train_scaled.shape)  # e.g. (56000, 14)
+
+# 4) Select top k features by ANOVA F-test
+k = 3
 anova_selector = SelectKBest(score_func=f_classif, k=k)
 X_train_selected = anova_selector.fit_transform(X_train_scaled, y_train)
-X_test_selected = anova_selector.transform(X_test_scaled)
+X_test_selected  = anova_selector.transform(X_test_scaled)
 
-# Get ANOVA F-scores for all features
+# 5) Inspect scores & names
 anova_scores = anova_selector.scores_
-
-# Map feature names to their ANOVA F-scores
-feature_names = parameter.columns
 anova_results = dict(zip(feature_names, anova_scores))
 
-# Display ANOVA results
-print("ANOVA F-scores for Features:")
-for parameter, score in anova_results.items():
-    print(f"{parameter}: {score:.2f}")
+print("ANOVA F-scores:")
+for name, score in anova_results.items():
+    print(f" • {name:15s}: {score:.2f}")
 
-# Selected feature indices and names
-selected_feature_indices = anova_selector.get_support(indices=True)
-selected_features = feature_names[selected_feature_indices]
-print("\nSelected Features (Top k):", list(selected_features))
+# 6) Which features were picked?
+selected_idx = anova_selector.get_support(indices=True)
+selected_features = [feature_names[i] for i in selected_idx]
+print("\nTop-3 features:", selected_features)
+
 
 # %%
 #!pip install catboost
@@ -912,18 +942,18 @@ model_info = {
 }
 
 # Save the model with metadata
-dump(model_info, 'gradient_boosting_model_with_metadata_2.joblib')
+dump(model_info, 'gradient_boosting_model_with_metadata_3.joblib')
 
 # 2. Save just the model (minimal version)
-dump(gbc, 'gradient_boosting_model_2.joblib')
+dump(gbc, 'gradient_boosting_model_3.joblib')
 
 # Save the scaler
-dump(scaler, 'scaler.joblib')
+dump(scaler, 'scaler_2.joblib')
 
 
 print("Models saved successfully:")
-print("- gradient_boosting_model_2.joblib")
-print("- gradient_boosting_model_with_metadata_2.joblib")
+print("- gradient_boosting_model_3.joblib")
+print("- gradient_boosting_model_with_metadata_3.joblib")
 print("- StandardScaler.joblib")
 
 # 4. Verification code (optional)

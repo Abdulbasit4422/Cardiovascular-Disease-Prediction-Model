@@ -24,10 +24,10 @@ st.markdown(custom_css, unsafe_allow_html=True)
 @st.cache_resource
 def load_resources():
     # Load model metadata and model
-    data = joblib.load('gradient_boosting_model_with_metadata_2.joblib')
+    data = joblib.load('gradient_boosting_model_with_metadata_3.joblib')
     model = data['model']
     # Load scaler
-    scaler = joblib.load('scaler.joblib')
+    scaler = joblib.load('scaler_2.joblib')
     return data, model, scaler
 
 model_data, model, scaler = load_resources()
